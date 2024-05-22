@@ -1,0 +1,23 @@
+<div class="ui-sidebar-lg">
+  <div class="user-info">
+    <img src="assets/avatar-1.png" alt="User Image" class="user-image" />
+    <h3>Fulano de Tal</h3>
+  </div>
+  <div class="menu-items">
+    <a routerLink="/spa/listar-transacoes" routerLinkActive="active"
+      >Listar Transações</a
+    >
+    <a routerLink="/spa/criar-transacao" routerLinkActive="active"
+      >Criar Transação</a
+    >
+  </div>
+  <div class="logout">
+    <button
+      pButton
+      type="button"
+      label="Logout"
+      icon="pi pi-sign-out"
+      (click)="logout()"
+    ></button>
+  </div>
+</div>
