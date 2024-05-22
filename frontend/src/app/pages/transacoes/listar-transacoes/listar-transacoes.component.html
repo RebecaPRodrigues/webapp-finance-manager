@@ -1,0 +1,43 @@
+<app-titulo titulo="listar transacoes"></app-titulo>
+
+<div class="painel">
+  <button pButton type="button" label="Criar Transação" icon="pi pi-sign-out" (click)="novaTransacao()"></button>
+</div>
+
+<p-table
+  [value]="transasoes"
+  styleClass="p-datatable-striped"
+  responsiveLayout="stack"
+  [breakpoint]="'320px'"
+  [tableStyle]="{ 'min-width': '50rem' }"
+  [paginator]="true"
+  [rows]="8"
+>
+  <ng-template pTemplate="header">
+    <tr>
+      <th>Descrição</th>
+      <th>Receptor</th>
+      <th>Data</th>
+      <th>Categoria</th>
+      <th>Método de pagamento</th>
+      <th>Tipo</th>
+      <th>Valor</th>
+    </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-transacao>
+    <tr>
+      <td>{{ transacao.description }}</td>
+      <td>{{ transacao.transactionWith }}</td>
+      <td>{{ transacao.date }}</td>
+      <td>{{ transacao.category.name }}</td>
+      <td>{{ transacao.paymentMethod.name }}</td>
+      <td>
+        <p-tag
+          [value]="transacao.type"
+          [severity]="getSeverity(transacao.type)"
+        />
+      </td>
+      <td>{{ transacao.amount | currency : "BRL" }}</td>
+    </tr>
+  </ng-template>
+</p-table>

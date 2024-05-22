@@ -1,0 +1,35 @@
+<app-titulo titulo="Criar transacao"></app-titulo>
+
+<form [formGroup]="form" (ngSubmit)="submit()">
+  <div class="flex flex-column gap-2">
+    <label for="input-description">Descrição</label><br>
+    <input
+      class="input-text"
+      id="input-description"
+      type="text"
+      pInputText
+      [value]="description"
+    />
+  </div>
+
+  <div class="card flex justify-content-center">
+    <label for="input-type">Tipo</label><br>
+    <p-dropdown
+      formControlName="type"
+      [options]="tipos"
+      optionLabel="type"
+      placeholder="Selecione um tipo"
+    />
+  </div>
+
+  <div class="flex flex-column gap-2">
+    <label for="input-amount">Valor</label><br>
+    <p-inputNumber inputId="integeronly" formControlName="amount" />
+    <!-- <input
+      class="input-text"
+      id="input-amount"
+      type="number"
+      [value]="amount"
+    /> -->
+  </div>
+</form>

@@ -1,0 +1,62 @@
+/* sidebar.component.css */
+.ui-sidebar-lg {
+  width: 100%;
+  max-width: 250px;
+  height: 100vh; /* Altura total da tela */
+  position: fixed; /* Fixa o sidebar na lateral */
+  left: 0;
+  top: 0;
+  background-color: #fff; /* Defina uma cor de fundo */
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1); /* Sombra sutil */
+  z-index: 1000; /* Certifique-se que fica sobre outros elementos */
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0 24px;
+}
+
+.user-info {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.user-image {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+}
+
+.menu-items {
+  height: 100%;
+  width: 100%;
+}
+
+.menu-items a {
+  display: block;
+  padding: 10px 20px;
+  text-decoration: none;
+  color: #333;
+  border-top: 1px solid #eee;
+  cursor: pointer;
+}
+
+.menu-items a:hover,
+.menu-items a.active:hover {
+  background-color: #d4d4d4;
+  color: #333;
+}
+
+.active {
+  background-color: #0EA5E9 !important; /* cor de fundo azul, por exemplo */
+  color: white !important; /* cor do texto branco */
+}
+
+.logout {
+  width: 100%;
+
+  button {
+    width: 100%;
+    margin: 20px 0;
+  }
+}
