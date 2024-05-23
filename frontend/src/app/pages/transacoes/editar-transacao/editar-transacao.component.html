@@ -1,6 +1,6 @@
-<app-titulo titulo="Criar transação"></app-titulo>
+<app-titulo titulo="Editar transação"></app-titulo>
 
-<form [formGroup]="formGroup" (ngSubmit)="submit()">
+<form [formGroup]="formGroup" (ngSubmit)="submit()" *ngIf="formGroup; else loading">
   <div class="flex flex-column gap-2">
     <label for="input-description">Descrição</label><br />
     <input
@@ -8,7 +8,6 @@
       type="text"
       pInputText
       formControlName="description"
-      placeholder="Digite uma descrição"
     />
   </div>
 
@@ -40,13 +39,17 @@
       type="text"
       pInputText
       formControlName="transactionWith"
-      placeholder="Digite um nome"
     />
   </div>
 
   <div class="flex flex-column gap-2">
     <label for="input-date">Data</label><br />
-    <input id="input-date" type="text" pInputText formControlName="date" />
+    <input
+      id="input-date"
+      type="text"
+      pInputText
+      formControlName="date"
+    />
   </div>
 
   <div class="flex flex-column gap-2">
@@ -56,7 +59,6 @@
       type="text"
       pInputText
       formControlName="category"
-      placeholder="Digite uma categoria"
     />
   </div>
 
@@ -67,9 +69,12 @@
       type="text"
       pInputText
       formControlName="paymentMethod"
-      placeholder="Digite um método de pagamento"
     />
   </div>
 
-  <button pButton type="submit">Criar transação</button>
+  <button pButton type="submit">Editar transação</button>
 </form>
+
+<ng-template #loading>
+  <p>carregando...</p>
+</ng-template>

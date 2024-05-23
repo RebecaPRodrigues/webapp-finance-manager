@@ -9,7 +9,7 @@ import { rotasSPA } from './pages/spa/spa.routes';
 export const routes: Routes = [
   {
     path: '',
-    component: HomeComponent
+    component: HomeComponent,
   },
   {
     path: 'login',
@@ -24,4 +24,9 @@ export const routes: Routes = [
     component: SpaComponent,
     children: rotasSPA
   },
+  {
+    path: '**',
+    redirectTo: '',
+    pathMatch: 'full'
+  }
 ];

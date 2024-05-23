@@ -1,1 +1,36 @@
-<p>login works!</p>
+<div class="viewport">
+  <div class="image">
+    <img src="assets/login.png" alt="carteira" />
+  </div>
+  <div class="form">
+    <h2>Login</h2>
+    <form>
+      <p-divider />
+      <div class="flex flex-column gap-2">
+        <label for="input-email">E-mail</label><br />
+        <input
+          id="input-email"
+          type="text"
+          pInputText
+          formControlName="email"
+          placeholder="Digite seu e-mail"
+        />
+      </div>
+
+      <div class="flex flex-column gap-2">
+        <label for="input-senha">Senha</label><br />
+        <input
+          id="input-senha"
+          type="password"
+          pInputText
+          formControlName="senha"
+          placeholder="Digite sua senha"
+        />
+      </div>
+
+      <button pButton type="submit">Entrar</button>
+      <p-divider />
+      <button pButton (click)="redirectToCadastro()" [outlined]="true">Cadastre-se</button>
+    </form>
+  </div>
+</div>

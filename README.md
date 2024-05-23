@@ -16,7 +16,7 @@ Trabalho final da disciplina de Desenvolvimento de Aplicações WEB do curso de 
 
 ### `POST` /auth
 
-Endpoint utilizado para autenticar um usuário.
+Endpoint utilizado para autenticar um usuário e obter informações de um usuário específico.
 
 **Corpo da Requisição:**
 
@@ -31,7 +31,11 @@ Endpoint utilizado para autenticar um usuário.
 
 ```json
 {
-  "token": "seu-token-de-autenticacao"
+  "_id": "some-hash",
+  "userName": "fulano de tal",
+  "email": "seu.email@mail.com",
+  "image": "some-url",
+  "admin": true
 }
 ```
 
@@ -40,14 +44,6 @@ Endpoint utilizado para autenticar um usuário.
 Endpoint utilizado para obter informações de todos os usuários. 
 
 `somente para usuários administradores`
-
-**Auth da Requisição:**
-
-```json
-{
-  "token": "seu-token-de-autenticacao"
-}
-```
 
 **Resposta da Requisição:**
 
@@ -68,22 +64,6 @@ Endpoint utilizado para obter informações de todos os usuários.
     "admin": false
   }
 ]
-```
-
-### `GET` /users/:id
-
-Endpoint utilizado para obter informações de um usuário específico.
-
-**Resposta da Requisição:**
-
-```json
-{
-  "_id": "some-hash",
-  "userName": "fulano de tal",
-  "email": "seu.email@mail.com",
-  "image": "some-url",
-  "admin": true
-}
 ```
 
 ### `GET` /transacoes/:user-id
