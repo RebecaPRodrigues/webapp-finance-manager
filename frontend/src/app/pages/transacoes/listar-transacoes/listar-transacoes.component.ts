@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TagModule } from 'primeng/tag';
 import { TableModule } from 'primeng/table';
 import { Transaction } from '../shared/transacoes.interface';
@@ -7,6 +7,8 @@ import { TituloComponent } from '../../../core/components/titulo/titulo.componen
 import { ButtonModule } from 'primeng/button';
 import { transactionsMocked } from '../shared/transacoes.mock';
 import { Router } from '@angular/router';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../../environments/environments';
 
 @Component({
   selector: 'app-listar-transacoes',
@@ -21,17 +23,49 @@ import { Router } from '@angular/router';
   templateUrl: './listar-transacoes.component.html',
   styleUrl: './listar-transacoes.component.scss',
 })
-export class ListarTransacoesComponent {
+export class ListarTransacoesComponent implements OnInit {
   public transasoes: Transaction[] = [];
+  public carregando = true;
+  public deletandoItem: string | null = null;
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    this.transasoes = transactionsMocked;
+    this.http.get<Transaction[]>(`${environment.apiUrl}/transacoes`).subscribe({
+      next: (transasoes) => {
+        this.transasoes = transasoes;
+        this.carregando = false;
+      },
+      error: () => {
+        this.transasoes = transactionsMocked;
+        this.carregando = false;
+      },
+    });
   }
 
-  public novaTransacao() {
-    this.router.navigate(['spa/criar-transacao'])
+  public editarTransacao(id: string) {
+    this.router.navigate([`spa/editar-transacao/${id}`]);
+  }
+
+  public deletarTransacao(id: string) {
+    this.deletandoItem = id;
+
+    this.http.delete(`${environment.apiUrl}/transacoes`).subscribe({
+      next: () => {
+        this.router.navigate(['spa/listar-transacoes'])
+
+        this.deletandoItem = null;
+      },
+      error: () => {
+        const indiceParaRemover = transactionsMocked.findIndex(item => item._id === id);
+
+        transactionsMocked.splice(indiceParaRemover, 1);
+
+        this.deletandoItem = null;
+
+        this.router.navigate(['spa/listar-transacoes'])
+      },
+    });
   }
 
   public getSeverity(status: string) {
