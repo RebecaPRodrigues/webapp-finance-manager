@@ -14,8 +14,8 @@ import { TituloComponent } from '../../../core/components/titulo/titulo.componen
 import { environment } from '../../../../environments/environments';
 import { ActivatedRoute, Router } from '@angular/router';
 import { HttpClient } from '@angular/common/http';
-import { Transaction } from '../shared/transacoes.interface';
-import { transactionsMocked } from '../shared/transacoes.mock';
+import { Transaction } from '../../../core/models/transacoes/transacoes.interface';
+import { transactionsMocked } from '../../../core/models/transacoes/transacoes.mock';
 
 @Component({
   selector: 'app-editar-transacao',

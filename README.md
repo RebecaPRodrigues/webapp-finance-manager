@@ -23,7 +23,7 @@ Endpoint utilizado para autenticar um usuário e obter informações de um usuá
 ```json
 {
   "email": "seuemail@mail.com",
-  "senha": "12345678"
+  "password": "12345678"
 }
 ```
 
@@ -36,6 +36,32 @@ Endpoint utilizado para autenticar um usuário e obter informações de um usuá
   "email": "seu.email@mail.com",
   "image": "some-url",
   "admin": true
+}
+```
+
+### `POST` /users
+
+Endpoint utilizado para criar um novo usuário e obter suas informações.
+
+**Corpo da Requisição:**
+
+```json
+{
+  "userName": "Fulano",
+  "email": "seuemail@mail.com",
+  "password": "12345678"
+}
+```
+
+**Resposta da Requisição:**
+
+```json
+{
+  "_id": "some-hash",
+  "userName": "fulano de tal",
+  "email": "seu.email@mail.com",
+  "image": "",
+  "admin": false
 }
 ```
 

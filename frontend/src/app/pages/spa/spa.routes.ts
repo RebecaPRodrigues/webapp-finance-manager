@@ -3,6 +3,7 @@ import { ListarTransacoesComponent } from "../transacoes/listar-transacoes/lista
 import { HomeComponent } from "../home/home.component";
 import { CriarTransacaoComponent } from "../transacoes/criar-transacao/criar-transacao.component";
 import { EditarTransacaoComponent } from "../transacoes/editar-transacao/editar-transacao.component";
+import { ListarUsuariosComponent } from "../listar-usuarios/listar-usuarios.component";
 
 export const rotasSPA: Routes = [
   {
@@ -19,6 +20,6 @@ export const rotasSPA: Routes = [
   },
   {
     path: 'listar-usuarios',
-    component: ListarTransacoesComponent,
+    component: ListarUsuariosComponent,
   }
 ];

@@ -1,10 +1,12 @@
+<p-toast />
+
 <div class="viewport">
   <div class="image">
     <img src="assets/login.png" alt="carteira" />
   </div>
   <div class="form">
     <h2>Cadastre-se</h2>
-    <form>
+    <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <p-divider />
       <div class="flex flex-column gap-2">
         <label for="input-nome">Nome</label><br />
@@ -12,7 +14,7 @@
           id="input-nome"
           type="text"
           pInputText
-          formControlName="nome"
+          formControlName="userName"
           placeholder="Digite seu nome"
         />
       </div>
@@ -34,7 +36,7 @@
           id="input-senha"
           type="password"
           pInputText
-          formControlName="senha"
+          formControlName="password"
           placeholder="Digite sua senha"
         />
       </div>
