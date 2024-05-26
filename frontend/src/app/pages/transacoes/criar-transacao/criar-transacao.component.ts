@@ -14,7 +14,8 @@ import { ButtonModule } from 'primeng/button';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environments';
-import { transactionsMocked } from '../shared/transacoes.mock';
+import { transactionsMocked } from '../../../core/models/transacoes/transacoes.mock';
+import { ToastModule } from 'primeng/toast';
 
 @Component({
   selector: 'app-criar-transacao',
@@ -27,13 +28,13 @@ import { transactionsMocked } from '../shared/transacoes.mock';
     ReactiveFormsModule,
     InputNumberModule,
     TituloComponent,
+    ToastModule,
     ButtonModule,
   ],
   templateUrl: './criar-transacao.component.html',
   styleUrl: './criar-transacao.component.scss',
 })
 export class CriarTransacaoComponent {
-  carregando = true;
   formGroup!: FormGroup;
   tipos: string[] = ['despesa', 'receita'];
 

@@ -1,0 +1,46 @@
+<app-titulo titulo="listar usuarios"></app-titulo>
+
+<div *ngIf="!carregando; else loading">
+  <p-table
+    [value]="usuarios"
+    styleClass="p-datatable-striped"
+    responsiveLayout="stack"
+    [breakpoint]="'320px'"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    [paginator]="true"
+    [rows]="8"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th>Imagem</th>
+        <th>Admin</th>
+        <th>Deletar</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-usuario>
+      <tr>
+        <td>{{ usuario.userName }}</td>
+        <td>{{ usuario.email }}</td>
+        <td><img src="assets/{{ usuario.image }}"></td>
+        <td>{{ usuario.admin ? 'sim' : 'não' }}</td>
+        <td>
+          <div class="buttons">
+            <p-button
+              (click)="deletarUsuario(usuario._id)"
+              icon="pi pi-trash"
+              size="small"
+              severity="danger"
+              [disabled]="deletandoItem === usuario._id"
+            />
+          </div>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<ng-template #loading>
+  <p>carregando...</p>
+</ng-template>

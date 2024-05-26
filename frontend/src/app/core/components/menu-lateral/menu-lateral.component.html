@@ -1,7 +1,11 @@
 <div class="ui-sidebar-lg">
   <div class="user-info">
-    <img src="assets/avatar-1.png" alt="User Image" class="user-image" />
-    <h3>Fulano de Tal</h3>
+    <img
+      src="assets/{{ usuario?.image }}"
+      alt="User Image"
+      class="user-image"
+    />
+    <h3>{{ usuario?.userName }}</h3>
   </div>
   <div class="menu-items">
     <a routerLink="/spa/listar-transacoes" routerLinkActive="active"
@@ -9,6 +13,9 @@
     >
     <a routerLink="/spa/criar-transacao" routerLinkActive="active"
       >Criar Transação</a
+    >
+    <a *ngIf="usuario?.admin" routerLink="/spa/listar-usuarios" routerLinkActive="active"
+      >Listar usuários</a
     >
   </div>
   <div class="logout">

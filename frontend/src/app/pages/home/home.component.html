@@ -1,5 +1,108 @@
-<p>landing page</p>
+<header>
+  <div class="container">
+    <h1>FinanceApp</h1>
+    <div class="hamburger" (click)="toggleMenu()">&#9776;</div>
+    <nav *ngIf="menuOpen">
+      <ul>
+        <li><a href="#features">Recursos</a></li>
+        <li><a href="#pricing">Planos</a></li>
+        <li><a href="#contact">Contato</a></li>
+        <li><a href="/login">login</a></li>
+        <li><a href="/cadastro">cadastre-se</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
 
-<a href="/login">login</a>
-<a href="/cadastro">cadastre-se</a>
-<a href="/spa/listar-transacoes">sem login</a>
+<section id="hero">
+  <div class="container">
+    <h2>Domine suas Finanças Pessoais</h2>
+    <p>
+      Com o FinanceApp, você pode controlar suas despesas, planejar seu
+      orçamento e alcançar suas metas financeiras com facilidade.
+    </p>
+    <a href="#pricing" class="btn-primary">Experimente Grátis</a>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <h2>Recursos Principais</h2>
+    <div class="content-prices">
+      <div class="feature">
+        <img src="/assets/icon-budget.png" alt="Ícone de Orçamento" />
+        <h3>Planejamento Financeiro</h3>
+        <p>
+          Visualize suas receitas, despesas e saldos de forma clara e
+          organizada.
+        </p>
+      </div>
+      <div class="feature">
+        <img src="/assets/icon-reports.png" alt="Ícone de Relatórios" />
+        <h3>Relatórios Detalhados</h3>
+        <p>
+          Gere relatórios detalhados para análise financeira e tomada de
+          decisões.
+        </p>
+      </div>
+      <div class="feature">
+        <img src="/assets/icon-goals.png" alt="Ícone de Metas" />
+        <h3>Definição de Metas</h3>
+        <p>
+          Estabeleça metas financeiras e acompanhe seu progresso ao longo do
+          tempo.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="pricing">
+  <div class="container">
+    <h2>Planos e Preços</h2>
+    <div class="content-prices">
+      <div class="pricing-plan">
+        <h3>Básico</h3>
+        <p>Gratuito</p>
+        <ul>
+          <li>Gerenciamento de Despesas</li>
+          <li>Relatórios Mensais</li>
+          <li>Suporte Básico</li>
+        </ul>
+        <a href="#" class="btn-secondary">Experimente Grátis</a>
+      </div>
+      <div class="pricing-plan">
+        <h3>Pro Mensal</h3>
+        <p>R$ 9,99/mês</p>
+        <ul>
+          <li>Todos os Recursos do Plano Básico</li>
+          <li>Metas Personalizadas</li>
+          <li>Suporte Prioritário</li>
+        </ul>
+        <a href="#" class="btn-primary">Assine Agora</a>
+      </div>
+
+      <div class="pricing-plan">
+        <h3>Pro Anual</h3>
+        <p>R$ 89,99/ano</p>
+        <ul>
+          <li>Todos os Recursos do Plano Básico</li>
+          <li>Metas Personalizadas</li>
+          <li>Suporte Prioritário</li>
+        </ul>
+        <a href="#" class="btn-primary">Assine Agora</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer id="contact">
+  <div class="container">
+    <h2>Entre em Contato</h2>
+    <p>
+      Ficou com alguma dúvida ou quer saber mais sobre o FinanceApp? Entre em
+      contato conosco.
+    </p>
+    <a href="mailto:contato@financeapp.com">contato"&#64;"financeapp.com</a>
+  </div>
+</footer>
