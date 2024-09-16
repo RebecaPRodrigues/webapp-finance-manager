@@ -13,7 +13,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SessionService } from '../../core/services/session.service';
 import { Usuario } from '../../core/models/usuario/usuario.interface';
 import { MessageService } from 'primeng/api';
-import { usuariosMocked } from '../../core/models/usuario/usuario.mock';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -43,7 +42,7 @@ export class CadastroComponent {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      userName: new FormControl<string | null>(null),
+      username: new FormControl<string | null>(null),
       email: new FormControl<string | null>(null),
       password: new FormControl<string | null>(null),
     });
@@ -57,9 +56,17 @@ export class CadastroComponent {
     console.log(this.formGroup?.value);
 
     if (this.formGroup?.valid) {
-      this.sessionService.cadastro(this.formGroup.value).subscribe({
+      let form = this.formGroup.value;
+      this.sessionService.cadastro(form.username, form.email, form.password).subscribe({
         next: (usuario) => this.sucessoAoCadastrarUsuario(usuario),
-        error: () => this.erroAoCadastrarUsuario(),
+        error: (error) => {
+          console.log(error);
+          this.messageService.add({
+            severity: 'error',
+            summary: 'Error',
+            detail: 'Não foi possível criar o usuario',
+          })
+        },
       });
     } else {
       console.log('formulário inválido! ', this.formGroup?.value);
@@ -72,20 +79,6 @@ export class CadastroComponent {
       summary: 'Sucesso!',
       detail: 'Usuário criado com sucesso',
     });
-    this.sessionService.usuario = usuario;
-    this.router.navigate(['/spa/listar-transacoes']);
-  }
-
-  erroAoCadastrarUsuario() {
-    let { userName, email, password } = this.formGroup.value;
-    let usuario = {
-      userName,
-      email,
-      password,
-      image: 'avatar-0.png',
-    };
-    usuariosMocked.push(usuario);
-    console.log(usuariosMocked);
     this.sessionService.usuario = usuario;
     this.router.navigate(['/spa/listar-transacoes']);
   }

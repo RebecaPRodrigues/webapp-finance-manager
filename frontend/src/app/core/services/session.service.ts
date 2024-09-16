@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, Observable } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
 import { Usuario } from '../models/usuario/usuario.interface';
 
@@ -13,27 +13,70 @@ export class SessionService {
 
   constructor(private http: HttpClient) {}
 
-  public cadastro(usuario: Usuario): Observable<Usuario> {
-    let { userName, email, password } = usuario;
-
-    return this.http.post<Usuario>(`${environment.apiUrl}/users`, {
-      userName,
+  public cadastro(username: string, email: string, password: string): Observable<Usuario> {
+    return this.http.post<Usuario>(${environment.apiUrl}/users, {
+      username,
       email,
       password,
     });
   }
 
-  public login(usuario: Usuario): Observable<Usuario> {
-    let { email, password } = usuario;
-
-    return this.http.post<Usuario>(`${environment.apiUrl}/auth`, {
-      email,
+  public login(username: string, password: string): Observable<{ token: string }> {
+    return this.http.post<{ token: string }>(${environment.apiUrl}/auth, {
+      username,
       password,
     });
+  }
+
+  public loadUserInfo(username: string) {
+    return this.login('admin123', 'admin123').pipe(
+      switchMap((response) => {
+        const token = response.token; // Obtem o token da resposta de login
+        const headers = new HttpHeaders({
+          Authorization: Bearer ${token}, // Insere o token nos headers
+        });
+
+        // Faz a requisição para buscar os usuários, após receber o token
+        return this.http.get<any[]>(${environment.apiUrl}/users, { headers }).pipe(
+          map(users => users.find(user => user.userName === username)) // Filtra pelo username
+        );
+      })
+    );
   }
 
   logout(): void {
     this.usuario = null;
+    this.clearToken();
+    this.clearUser();
+  }
+
+  /* TOKEN */
+  getToken(): string | null {
+    return localStorage.getItem('jwtToken');
+  }
+
+  setToken(token: string): void {
+    localStorage.setItem('jwtToken', token);
+  }
+
+  clearToken(): void {
+    localStorage.removeItem('jwtToken');
+  }
+
+  /* USER */
+  saveUser(user: any): void {
+    const userString = JSON.stringify(user);
+    localStorage.setItem('currentUser', userString);
+  }
+
+  getUser(): any | null {
+    const userString = localStorage.getItem('currentUser');
+    if (userString) return JSON.parse(userString);
+    return null;
+  }
+
+  clearUser(): void {
+    localStorage.removeItem('currentUser');
   }
 
   // Getter

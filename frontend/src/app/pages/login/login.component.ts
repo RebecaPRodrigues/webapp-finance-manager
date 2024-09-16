@@ -11,8 +11,6 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { SessionService } from '../../core/services/session.service';
-import { usuariosMocked } from '../../core/models/usuario/usuario.mock';
-import { Usuario } from '../../core/models/usuario/usuario.interface';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 
@@ -43,7 +41,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      email: new FormControl<string | null>(null),
+      username: new FormControl<string | null>(null),
       password: new FormControl<string | null>(null),
     });
   }
@@ -56,8 +54,15 @@ export class LoginComponent {
     console.log(this.formGroup?.value);
 
     if (this.formGroup?.valid) {
-      this.sessionService.login(this.formGroup.value).subscribe({
-        next: (usuario) => this.sucessoAoLogarUsuario(usuario),
+      let form = this.formGroup.value;
+      this.sessionService.login(form.username, form.password).subscribe({
+        next: (response) => {
+          this.sessionService.setToken(response.token);
+          this.router.navigate(['/spa/listar-transacoes']);
+          this.sessionService.loadUserInfo(form.username).subscribe({
+            next: (user) => this.sessionService.saveUser(user)
+          })
+        },
         error: () => this.erroAoLogarUsuario(),
       });
     } else {
@@ -65,27 +70,13 @@ export class LoginComponent {
     }
   }
 
-  private sucessoAoLogarUsuario(usuario: Usuario) {
-    this.sessionService.usuario = usuario;
-    this.router.navigate(['/spa/listar-transacoes']);
-  }
 
   private erroAoLogarUsuario() {
-    let { email, password } = this.formGroup.value;
-    let usuario = usuariosMocked.find((usuario) => usuario.email == email);
-
-    console.log(usuario);
-
-    if (usuario && usuario?.password === password) {
-      this.sessionService.usuario = usuario;
-      this.router.navigate(['/spa/listar-transacoes']);
-    } else {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Error',
-        detail: 'Senha inválida',
-      });
-      this.formGroup.reset();
-    }
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Error',
+      detail: 'Senha inválida',
+    });
+    this.formGroup.reset();
   }
 }
