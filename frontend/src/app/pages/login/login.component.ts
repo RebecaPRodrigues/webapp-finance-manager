@@ -11,8 +11,6 @@ import { ButtonModule } from 'primeng/button';
 import { DividerModule } from 'primeng/divider';
 import { InputTextModule } from 'primeng/inputtext';
 import { SessionService } from '../../core/services/session.service';
-import { usuariosMocked } from '../../core/models/usuario/usuario.mock';
-import { Usuario } from '../../core/models/usuario/usuario.interface';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
 import { HttpClient } from '@angular/common/http';
@@ -47,7 +45,7 @@ export class LoginComponent {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      email: new FormControl<string | null>(null),
+      username: new FormControl<string | null>(null),
       password: new FormControl<string | null>(null),
     });
   }

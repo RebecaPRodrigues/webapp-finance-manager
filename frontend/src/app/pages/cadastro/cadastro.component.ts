@@ -56,7 +56,6 @@ export class CadastroComponent {
   submit() {
     if (this.formGroup.valid) {
       const { fullName, username, email, password } = this.formGroup.value;
-
       if (!fullName || !username || !email || !password) {
         this.messageService.add({
           severity: 'warn',
