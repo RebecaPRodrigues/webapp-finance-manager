@@ -51,13 +51,14 @@
 
   <div class="flex flex-column gap-2">
     <label for="input-category">Categoria</label><br />
-    <input
-      id="input-category"
-      type="text"
-      pInputText
-      formControlName="category"
-      placeholder="Digite uma categoria"
-    />
+    <p-dropdown
+    [options]="categorias"
+    formControlName="category"
+    optionLabel="label"
+    optionValue="value"
+    placeholder="Selecione uma categoria"
+  />
+  
   </div>
 
   <div class="flex flex-column gap-2">

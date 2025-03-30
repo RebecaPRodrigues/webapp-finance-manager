@@ -1,11 +1,11 @@
 <div class="ui-sidebar-lg">
   <div class="user-info">
     <img
-      src="assets/{{ usuario?.image }}"
+      src="assets/{{ usuario?.imageUrl }}"
       alt="User Image"
       class="user-image"
     />
-    <h3>{{ usuario?.userName }}</h3>
+  <p>{{ usuario?.username }}</p>
   </div>
   <div class="menu-items">
     <a routerLink="/spa/listar-transacoes" routerLinkActive="active"

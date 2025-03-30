@@ -1,4 +1,14 @@
-<app-titulo titulo="listar transações"></app-titulo>
+<div class="top-bar">
+  <app-titulo titulo="Listar Transações"></app-titulo>
+  
+  <p-button
+    label="Baixar Relatório"
+    icon="pi pi-download"
+    (click)="baixarRelatorio()"
+    severity="info"
+    styleClass="p-button-sm"
+  ></p-button>
+</div>
 
 <div *ngIf="!carregando; else loading">
   <p-table
@@ -57,6 +67,8 @@
     </ng-template>
   </p-table>
 </div>
+
+<p-confirmDialog></p-confirmDialog>
 
 <ng-template #loading>
   <p>carregando...</p>

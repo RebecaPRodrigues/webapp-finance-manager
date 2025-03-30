@@ -2,31 +2,35 @@ import { Usuario } from './usuario.interface';
 
 export const usuariosMocked: Usuario[] = [
   {
-    userName: 'admin',
+    username: 'admin',
     email: 'admin@email.com',
     password: '12345678',
-    image: 'avatar-1.png',
-    admin: true,
+    imageUrl: 'avatar-1.png',
+    role: 'user',
+    admin: true
   },
   {
-    userName: 'Fulano',
+    username: 'Fulano',
     email: 'fulano@email.com',
     password: '12345678',
-    image: 'avatar-0.png',
-    admin: false,
+    imageUrl: 'avatar-0.png',
+    role: 'user',
+    admin: false
   },
   {
-    userName: 'Beltrano',
+    username: 'Beltrano',
     email: 'beltrano@email.com',
     password: '12345678',
-    image: 'avatar-0.png',
-    admin: false,
+    imageUrl: 'avatar-0.png',
+    role: 'user',
+    admin: false
   },
   {
-    userName: 'Ciclano',
+    username: 'Ciclano',
     email: 'ciclano@email.com',
     password: '12345678',
-    image: 'avatar-0.png',
-    admin: false,
+    imageUrl: 'avatar-0.png',
+    role: 'user',
+    admin: false
   }
 ];

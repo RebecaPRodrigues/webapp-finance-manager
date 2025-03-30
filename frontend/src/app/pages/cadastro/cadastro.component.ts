@@ -13,7 +13,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SessionService } from '../../core/services/session.service';
 import { Usuario } from '../../core/models/usuario/usuario.interface';
 import { MessageService } from 'primeng/api';
-import { usuariosMocked } from '../../core/models/usuario/usuario.mock';
 import { ToastModule } from 'primeng/toast';
 
 @Component({
@@ -43,7 +42,8 @@ export class CadastroComponent {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
-      userName: new FormControl<string | null>(null),
+      fullName: new FormControl<string | null>(null),
+      username: new FormControl<string | null>(null),
       email: new FormControl<string | null>(null),
       password: new FormControl<string | null>(null),
     });
@@ -54,15 +54,33 @@ export class CadastroComponent {
   }
 
   submit() {
-    console.log(this.formGroup?.value);
+    if (this.formGroup.valid) {
+      const { fullName, username, email, password } = this.formGroup.value;
 
-    if (this.formGroup?.valid) {
-      this.sessionService.cadastro(this.formGroup.value).subscribe({
+      if (!fullName || !username || !email || !password) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Campos obrigatórios',
+          detail: 'Preencha todos os campos para continuar.',
+        });
+        return;
+      }
+
+      const payload: Usuario = {
+        username,
+        email,
+        password,
+        role: 'USER',
+        imageUrl: 'avatar-0.png',
+        fullName,
+      };
+
+      this.sessionService.cadastro(payload).subscribe({
         next: (usuario) => this.sucessoAoCadastrarUsuario(usuario),
-        error: () => this.erroAoCadastrarUsuario(),
+        error: (error) => this.erroAoCadastrarUsuario(error),
       });
     } else {
-      console.log('formulário inválido! ', this.formGroup?.value);
+      console.log('formulário inválido!', this.formGroup.value);
     }
   }
 
@@ -74,19 +92,15 @@ export class CadastroComponent {
     });
     this.sessionService.usuario = usuario;
     this.router.navigate(['/spa/listar-transacoes']);
+    localStorage.setItem('user', JSON.stringify(usuario));
   }
 
-  erroAoCadastrarUsuario() {
-    let { userName, email, password } = this.formGroup.value;
-    let usuario = {
-      userName,
-      email,
-      password,
-      image: 'avatar-0.png',
-    };
-    usuariosMocked.push(usuario);
-    console.log(usuariosMocked);
-    this.sessionService.usuario = usuario;
-    this.router.navigate(['/spa/listar-transacoes']);
+  erroAoCadastrarUsuario(error: any) {
+    console.error('Erro ao cadastrar usuário:', error);
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erro ao cadastrar',
+      detail: error?.error?.message || 'Erro inesperado. Tente novamente.',
+    });
   }
 }

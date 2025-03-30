@@ -1,8 +1,10 @@
 export interface Usuario {
   _id?: string;
-  userName?: string;
+  username: string;
   email: string;
   password?: string;
-  image?: string;
+  role: string;
+  imageUrl?: string;
   admin?: boolean;
+  fullName?: string;
 }
