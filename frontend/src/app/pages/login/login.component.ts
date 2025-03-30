@@ -13,6 +13,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { SessionService } from '../../core/services/session.service';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../../../environments/environments';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-login',
@@ -36,7 +39,8 @@ export class LoginComponent {
   constructor(
     private router: Router,
     private sessionService: SessionService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private http: HttpClient
   ) {}
 
   ngOnInit(): void {
@@ -51,32 +55,48 @@ export class LoginComponent {
   }
 
   submit() {
-    console.log(this.formGroup?.value);
-
-    if (this.formGroup?.valid) {
-      let form = this.formGroup.value;
-      this.sessionService.login(form.username, form.password).subscribe({
-        next: (response) => {
-          this.sessionService.setToken(response.token);
-          this.router.navigate(['/spa/listar-transacoes']);
-          this.sessionService.loadUserInfo(form.username).subscribe({
-            next: (user) => this.sessionService.saveUser(user)
-          })
-        },
-        error: () => this.erroAoLogarUsuario(),
-      });
-    } else {
-      console.log('formulário inválido! ', this.formGroup?.value);
-    }
+    this.sessionService.login(this.formGroup.value).subscribe({
+      next: (res) => {
+        console.log('Resposta do login:', res);
+  
+        const usuario: Usuario = {
+          _id: res.id,
+          email: res.email,
+          admin: res.role === 'ADMIN',
+          username: res.username, 
+          role: res.role          
+        };
+  
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('user', JSON.stringify(usuario));
+        this.sessionService.usuario = usuario;
+  
+        this.router.navigate(['/spa/listar-transacoes']);
+      },
+      error: (err) => {
+        console.error('Erro no login', err);
+        this.erroAoLogarUsuario();
+      },
+    });
   }
 
-
   private erroAoLogarUsuario() {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Error',
-      detail: 'Senha inválida',
-    });
-    this.formGroup.reset();
+    let { email, password } = this.formGroup.value;
+    let usuario = usuariosMocked.find((usuario) => usuario.email == email);
+
+    console.log(usuario);
+
+    if (usuario && usuario?.password === password) {
+      this.sessionService.usuario = usuario;
+      localStorage.setItem('user', JSON.stringify(usuario));
+      this.router.navigate(['/spa/listar-transacoes']);
+    } else {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Error',
+        detail: 'Senha inválida',
+      });
+      this.formGroup.reset();
+    }
   }
 }

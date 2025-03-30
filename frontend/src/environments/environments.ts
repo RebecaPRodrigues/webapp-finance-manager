@@ -1,3 +1,3 @@
 export const environment = {
-  apiUrl: 'http://localhost:3000'
+  apiUrl: 'https://finance-webapp-3627d3f5c923.herokuapp.com'
 };

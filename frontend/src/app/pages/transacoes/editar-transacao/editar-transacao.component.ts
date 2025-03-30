@@ -13,9 +13,8 @@ import { InputTextModule } from 'primeng/inputtext';
 import { TituloComponent } from '../../../core/components/titulo/titulo.component';
 import { environment } from '../../../../environments/environments';
 import { ActivatedRoute, Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Transaction } from '../../../core/models/transacoes/transacoes.interface';
-import { transactionsMocked } from '../../../core/models/transacoes/transacoes.mock';
 
 @Component({
   selector: 'app-editar-transacao',
@@ -36,7 +35,10 @@ import { transactionsMocked } from '../../../core/models/transacoes/transacoes.m
 export class EditarTransacaoComponent {
   public formGroup!: FormGroup;
   public id = this.route.snapshot.params['id'];
-  public tipos = ['despesa', 'receita'];
+  public tipos = [
+    { label: 'Despesa', value: 'DESPESA' },
+    { label: 'Receita', value: 'RECEITA' },
+  ];
 
   constructor(
     private http: HttpClient,
@@ -45,69 +47,69 @@ export class EditarTransacaoComponent {
   ) {}
 
   ngOnInit(): void {
-    this.http
-      .get<Transaction>(`${environment.apiUrl}/transacoes/${this.id}`)
-      .subscribe({
-        next: (transacao) => this.loadForm(transacao),
-        error: () =>
-          this.loadForm(
-            transactionsMocked.find((transacao) => transacao._id === this.id) ??
-              transactionsMocked[0]
-          ),
-      });
-  }
-
-  loadForm(transacao: Transaction) {
     this.formGroup = new FormGroup({
-      description: new FormControl<string | null>(transacao.description),
-      type: new FormControl<string>(transacao.type),
-      amount: new FormControl<number>(transacao.amount),
-      transactionWith: new FormControl<string | null>(
-        transacao.transactionWith
-      ),
-      date: new FormControl<string>(transacao.date),
-      category: new FormControl<string | null>(transacao.category),
-      paymentMethod: new FormControl<string | null>(transacao.paymentMethod),
+      description: new FormControl<string | null>(null),
+      type: new FormControl<string | null>(null),
+      amount: new FormControl<number | null>(null),
+      transactionWith: new FormControl<string | null>(null),
+      date: new FormControl<string | null>(null),
+      category: new FormControl<string | null>(null),
+      paymentMethod: new FormControl<string | null>(null),
+    });
+
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<Transaction>(`${environment.apiUrl}/transactions/transaction/${this.id}`, { headers })
+    .subscribe({
+      next: (transacao) => {
+        console.log('Transação recebida:', transacao); 
+  
+        this.formGroup.patchValue({
+          description: transacao.description,
+          type: transacao.type?.toUpperCase() || null, 
+          amount: transacao.amount,
+          transactionWith: transacao.transactionWith,
+          date: transacao.date,
+          category: transacao.category,
+          paymentMethod: transacao.paymentMethod,
+        });
+      },
+      error: (err) => {
+        console.error('Erro ao carregar transação:', err);
+      },
     });
   }
 
-  createDate(): string {
-    const now = new Date();
-    const year = now.getFullYear();
-    const month = now.getMonth() + 1;
-    const day = now.getDate();
-
-    return `${year}-${month.toString().padStart(2, '0')}-${day
-      .toString()
-      .padStart(2, '0')}`;
-  }
-
   submit() {
-    console.log(this.formGroup?.value);
-
-    if (this.formGroup?.valid) {
-      this.http
-        .put(
-          `${environment.apiUrl}/transacoes/${this.id}`,
-          this.formGroup.value
-        )
-        .subscribe({
-          next: () => this.router.navigate(['/spa/listar-transacoes']),
-          error: () => {
-            const indiceParaAtualizar = transactionsMocked.findIndex(
-              (item) => item._id === this.id
-            );
-
-            transactionsMocked[indiceParaAtualizar] = {
-              _id: this.id,
-              ...this.formGroup.value,
-            };
-
-            this.router.navigate(['/spa/listar-transacoes']);
-          },
-        });
-    } else {
-      console.log('formulário inválido! ', this.formGroup?.value);
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+  
+    const userId = user?.id || user?._id;
+    if (!this.formGroup.valid || !userId) {
+      console.warn('Formulário inválido ou usuário não autenticado');
+      return;
     }
+  
+    const body = {
+      ...this.formGroup.value,
+      userId
+    };
+  
+    this.http
+      .put(`${environment.apiUrl}/transactions/${this.id}`, body, {
+        headers,
+      })
+      .subscribe({
+        next: () => this.router.navigate(['/spa/listar-transacoes']),
+        error: (err) =>
+          console.error('Erro ao atualizar transação:', err),
+      });
   }
+  
 }

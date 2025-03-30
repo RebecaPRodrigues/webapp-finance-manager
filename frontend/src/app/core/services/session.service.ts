@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 
-import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+
+import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
 import { Usuario } from '../models/usuario/usuario.interface';
+import { LoginResponse } from '../models/usuario/login-response.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -13,19 +15,52 @@ export class SessionService {
 
   constructor(private http: HttpClient) {}
 
-  public cadastro(username: string, email: string, password: string): Observable<Usuario> {
-    return this.http.post<Usuario>(${environment.apiUrl}/users, {
+  public cadastro(usuario: Usuario): Observable<Usuario> {
+    const { username, email, password, role, imageUrl } = usuario;
+  
+    const payload = {
       username,
       email,
       password,
-    });
+      role,
+      imageUrl,
+    };
+  
+    return this.http.post<Usuario>(`${environment.apiUrl}/users`, payload, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: true 
+    }).pipe(
+      tap((res: Usuario) => {
+        this.usuario = res;
+        localStorage.setItem('user', JSON.stringify(res));
+   
+      })
+    );
   }
-
-  public login(username: string, password: string): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(${environment.apiUrl}/auth, {
-      username,
+  
+  public login(usuario: Usuario): Observable<LoginResponse> {
+    let { email, password } = usuario;
+  
+    return this.http.post<LoginResponse>(`${environment.apiUrl}/auth`, {
+      username: email,
       password,
-    });
+    }).pipe(
+      tap((res: LoginResponse) => {
+        const usuarioLogado: Usuario = {
+          username: res.username, 
+          email: res.email,
+          role: res.role,
+          imageUrl: 'avatar-0.png',
+          password: '', 
+        };
+  
+        this.usuario = usuarioLogado;
+        localStorage.setItem('user', JSON.stringify(usuarioLogado));
+        localStorage.setItem('token', res.token);
+      })
+    );
   }
 
   public loadUserInfo(username: string) {
@@ -79,6 +114,14 @@ export class SessionService {
     localStorage.removeItem('currentUser');
   }
 
+  getUsuarioId(): string | null {
+    const user = localStorage.getItem('user');
+    if (!user) return null;
+    
+    const parsed = JSON.parse(user);
+    return parsed.id || parsed._id || null;
+  }
+  
   // Getter
   public get usuario(): Observable<Usuario | null> {
     return this._usuarioSubject.asObservable();

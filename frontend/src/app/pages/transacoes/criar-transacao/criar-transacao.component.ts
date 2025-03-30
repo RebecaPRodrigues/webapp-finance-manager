@@ -16,6 +16,7 @@ import { Router } from '@angular/router';
 import { environment } from '../../../../environments/environments';
 import { transactionsMocked } from '../../../core/models/transacoes/transacoes.mock';
 import { ToastModule } from 'primeng/toast';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
   selector: 'app-criar-transacao',
@@ -36,7 +37,18 @@ import { ToastModule } from 'primeng/toast';
 })
 export class CriarTransacaoComponent {
   formGroup!: FormGroup;
-  tipos: string[] = ['despesa', 'receita'];
+  tipos: string[] = ['RECEITA', 'DESPESA'];
+
+  categorias = [
+    { label: 'Salário', value: 'SALARIO' },
+    { label: 'Alimentação', value: 'ALIMENTACAO' },
+    { label: 'Moradia', value: 'MORADIA' },
+    { label: 'Lazer', value: 'LAZER' },
+    { label: 'Transporte', value: 'TRANSPORTE' },
+    { label: 'Educação', value: 'EDUCACAO' },
+    { label: 'Saúde', value: 'SAUDE' },
+    { label: 'Outros', value: 'OUTROS' },
+  ];  
 
   constructor(private http: HttpClient, private router: Router) {}
 
@@ -64,20 +76,35 @@ export class CriarTransacaoComponent {
   }
 
   submit() {
-    console.log(this.formGroup?.value);
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    const token = localStorage.getItem('token');
+  
+    const userId = user.id || user._id;
 
-    if (this.formGroup?.valid) {
-      this.http
-        .post(`${environment.apiUrl}/transacoes`, this.formGroup.value)
-        .subscribe({
-          next: () => this.router.navigate(['/spa/listar-transacoes']),
-          error: () => {
-            transactionsMocked.unshift(this.formGroup.value)
-            this.router.navigate(['/spa/listar-transacoes'])
-          }
-        });
-    } else {
-      console.log('formulário inválido! ', this.formGroup?.value);
+    if (!this.formGroup.valid || !userId || !token) {
+
+      console.warn('Formulário inválido ou usuário não logado');
+      return;
     }
+  
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`
+    });
+  
+    const body = {
+      ...this.formGroup.value,
+      category: this.formGroup.value.category?.toUpperCase(),
+      userId
+    };
+  
+    console.log('Categoria enviada:', this.formGroup.value.category);
+  
+    this.http.post(`${environment.apiUrl}/transactions`, body, { headers }).subscribe({
+      next: () => this.router.navigate(['/spa/listar-transacoes']),
+      error: (err) => {
+        console.error('Erro ao criar transação:', err);
+      }
+    });
   }
-}
+  
+}  

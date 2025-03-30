@@ -42,6 +42,7 @@ export class CadastroComponent {
 
   ngOnInit(): void {
     this.formGroup = new FormGroup({
+      fullName: new FormControl<string | null>(null),
       username: new FormControl<string | null>(null),
       email: new FormControl<string | null>(null),
       password: new FormControl<string | null>(null),
@@ -53,23 +54,32 @@ export class CadastroComponent {
   }
 
   submit() {
-    console.log(this.formGroup?.value);
+    if (this.formGroup.valid) {
+      const { fullName, username, email, password } = this.formGroup.value;
+      if (!fullName || !username || !email || !password) {
+        this.messageService.add({
+          severity: 'warn',
+          summary: 'Campos obrigatórios',
+          detail: 'Preencha todos os campos para continuar.',
+        });
+        return;
+      }
 
-    if (this.formGroup?.valid) {
-      let form = this.formGroup.value;
-      this.sessionService.cadastro(form.username, form.email, form.password).subscribe({
+      const payload: Usuario = {
+        username,
+        email,
+        password,
+        role: 'USER',
+        imageUrl: 'avatar-0.png',
+        fullName,
+      };
+
+      this.sessionService.cadastro(payload).subscribe({
         next: (usuario) => this.sucessoAoCadastrarUsuario(usuario),
-        error: (error) => {
-          console.log(error);
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Error',
-            detail: 'Não foi possível criar o usuario',
-          })
-        },
+        error: (error) => this.erroAoCadastrarUsuario(error),
       });
     } else {
-      console.log('formulário inválido! ', this.formGroup?.value);
+      console.log('formulário inválido!', this.formGroup.value);
     }
   }
 
@@ -81,5 +91,15 @@ export class CadastroComponent {
     });
     this.sessionService.usuario = usuario;
     this.router.navigate(['/spa/listar-transacoes']);
+    localStorage.setItem('user', JSON.stringify(usuario));
+  }
+
+  erroAoCadastrarUsuario(error: any) {
+    console.error('Erro ao cadastrar usuário:', error);
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Erro ao cadastrar',
+      detail: error?.error?.message || 'Erro inesperado. Tente novamente.',
+    });
   }
 }
