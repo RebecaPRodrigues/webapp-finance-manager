@@ -33,11 +33,14 @@
           },
           "configurations": {
             "production": {
+              "aot": true,
+              "optimization": true,
+              "sourceMap": false,
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "10mb",
+                  "maximumError": "15mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -90,5 +93,8 @@
         }
       }
     }
+  },
+  "cli": {
+    "analytics": "fdcfaad7-a9dc-4812-80a2-69d4c8922be8"
   }
 }

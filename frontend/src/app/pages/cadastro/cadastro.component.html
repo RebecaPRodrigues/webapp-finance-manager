@@ -8,17 +8,32 @@
     <h2>Cadastre-se</h2>
     <form [formGroup]="formGroup" (ngSubmit)="submit()">
       <p-divider />
+
+      <!-- Campo de nome completo -->
       <div class="flex flex-column gap-2">
-        <label for="input-nome">Nome</label><br />
+        <label for="input-nome">Nome completo</label><br />
         <input
           id="input-nome"
           type="text"
           pInputText
-          formControlName="userName"
-          placeholder="Digite seu nome"
+          formControlName="fullName"
+          placeholder="Digite seu nome completo"
         />
       </div>
 
+      <!-- Campo de nome de usuário (login) -->
+      <div class="flex flex-column gap-2">
+        <label for="input-usuario">Usuário</label><br />
+        <input
+          id="input-usuario"
+          type="text"
+          pInputText
+          formControlName="username"
+          placeholder="Digite um nome de usuário"
+        />
+      </div>
+
+      <!-- Campo de e-mail -->
       <div class="flex flex-column gap-2">
         <label for="input-email">E-mail</label><br />
         <input
@@ -30,6 +45,7 @@
         />
       </div>
 
+      <!-- Campo de senha -->
       <div class="flex flex-column gap-2">
         <label for="input-senha">Senha</label><br />
         <input
@@ -43,7 +59,9 @@
 
       <button pButton type="submit">Cadastrar</button>
       <p-divider />
-      <button pButton (click)="redirectToLogin()" [outlined]="true">Fazer login</button>
+      <button pButton (click)="redirectToLogin()" [outlined]="true">
+        Fazer login
+      </button>
     </form>
   </div>
 </div>

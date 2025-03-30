@@ -6,9 +6,8 @@ import { TagModule } from 'primeng/tag';
 import { TituloComponent } from '../../core/components/titulo/titulo.component';
 import { Usuario } from '../../core/models/usuario/usuario.interface';
 import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from '../../../environments/environments';
-import { usuariosMocked } from '../../core/models/usuario/usuario.mock';
 
 @Component({
   selector: 'app-listar-usuarios',
@@ -31,13 +30,18 @@ export class ListarUsuariosComponent {
   constructor(private router: Router, private http: HttpClient) {}
 
   ngOnInit() {
-    this.http.get<Usuario[]>(`${environment.apiUrl}/usuarios`).subscribe({
-      next: (usuarios: Usuario[]) => {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
+
+    this.http.get<Usuario[]>(`${environment.apiUrl}/users`, { headers }).subscribe({
+      next: (usuarios) => {
         this.usuarios = usuarios;
         this.carregando = false;
       },
-      error: () => {
-        this.usuarios = usuariosMocked;
+      error: (err) => {
+        console.error('Erro ao buscar usuários', err);
         this.carregando = false;
       },
     });
@@ -46,20 +50,19 @@ export class ListarUsuariosComponent {
   public deletarUsuario(id: string) {
     this.deletandoItem = id;
 
-    this.http.delete(`${environment.apiUrl}/usuarios`).subscribe({
-      next: () => {
-        this.router.navigate(['spa/listar-usuarios'])
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+    });
 
+    this.http.delete(`${environment.apiUrl}/users/${id}`, { headers }).subscribe({
+      next: () => {
+        this.usuarios = this.usuarios.filter(u => u._id !== id);
         this.deletandoItem = null;
       },
-      error: () => {
-        const indiceParaRemover = usuariosMocked.findIndex(item => item._id === id);
-
-        usuariosMocked.splice(indiceParaRemover, 1);
-
+      error: (err) => {
+        console.error('Erro ao deletar usuário', err);
         this.deletandoItem = null;
-
-        this.router.navigate(['spa/listar-usuarios'])
       },
     });
   }
